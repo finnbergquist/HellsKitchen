@@ -11,7 +11,6 @@ class Recipe:
         self.ingredients = {}
 
     def fitness(self):
-
         return len(self.ingredients)
 
     def normalize(self):
