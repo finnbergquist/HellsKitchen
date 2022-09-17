@@ -1,14 +1,21 @@
 
 class Recipe:
-    '''
+    """
     Recipe represents a single recipe, with a dictionary that stores the ingredients.
 
     key value pair ex:  ingredients['chicken'] = 10
-    '''
+    """
 
 
-    def __init__(self):
-        self.ingredients = {}
+    def __init__(self, ingredients, name):
+        """
+        Constructor for the recipe class.
+        Args:
+            ingredients (dict - might change to list(Ingredient)): the list of all ingredients and amounts for the recipe
+            name (str): the name of the recipe
+        """
+        self.ingredients = ingredients
+        self.name = name
 
     def fitness(self):
         return len(self.ingredients)
@@ -17,7 +24,7 @@ class Recipe:
         return
 
     def mutate(self):
-        '''
+        """
         Based on random probability, choose whether or not we will mutate
 
             If we are gonna mutate, choose between 4 different mutation possibilities:
@@ -29,6 +36,8 @@ class Recipe:
             3: addition of an ingredient, renormalize
 
             4: deletion of an ingredient, renormalize
-        '''
+        """
         return
 
+    def __str__(self):
+        return self.name + ": " + str(self.ingredients)
