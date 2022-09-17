@@ -5,12 +5,13 @@ class RecipeBook:
     Holds a list of all current recipes.
     '''
 
-    def __init__(self, population):
+    def __init__(self, recipe_population):
         self.recipes = []
-        self.population = population
+        self.recipe_population = recipe_population#List that Lily will return from the parsing
 
 
     def selection(self):
+        ''''''
         return
     
     def recombination(self):
