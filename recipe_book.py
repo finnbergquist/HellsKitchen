@@ -1,4 +1,6 @@
 import glob
+import imp
+import random
 from recipe import Recipe
 
 class RecipeBook:
@@ -36,17 +38,46 @@ class RecipeBook:
 
 
     def selection(self):
-        """"""
+        """ Method for selecting individuals for the breeding pool. 
+
+        Args:
+        """
         return
     
-    def recombination(self):
-        return
+    def recombination(self, recipeOne, recipeTwo):
+        """Implements recombination using OnePoint crossover, a technique that will
+        randomly select a pivot index in the ingredient list of each recipe, 
+        thus dividing each recipe into two sub-lists of ingredients. 
+        A new recipe is then created by combining the first sub-list of the first recipe
+        with the second sub-list of the second recipe.
+        Args:
+        recipeOne (recipe): first recipe 
+
+        recipeTwo (reicpe): second recipe 
+
+        """
+
+        newRecipe = new Recipe()
+
+        pivot = random.randint(len(recipeOne))
+
+        for i in range(0, pivot):
+            newRecipe.append(recipeOne[i])
+        for j in range(pivot +1, len(recipeTwo)):
+            newRecipe.append(recipeOne[j])
+
+
+        RecipeBook.add(newRecipe)
+
+
+        return newRecipe
 
     def mutation(self):
         """Iterate through all the recipes and call recipe.mutate()"""
         return
 
     def sort_fitness(self):
+        """Sorts the fitness of each recipe based on """
         return
 
     def __str__(self):
