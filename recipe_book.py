@@ -32,7 +32,7 @@ class RecipeBook:
                     ingredient = ingredient.strip()
                     self.inspiring_ingredients.add(ingredient)
                     current_ingredients[ingredient] = float(amount)
-                self.recipes.append(Recipe(current_ingredients, "recipe_number_{0}".format(self.total_recipes_created)))
+                self.recipes.append(Recipe(current_ingredients, "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients))
                 self.total_recipes_created += 1
         self.inspiring_ingredients = list(self.inspiring_ingredients)
 
