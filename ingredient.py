@@ -12,3 +12,6 @@ class Ingredient():
 
         self.ingredient_name = ingredient_name
         self.amount = amount
+
+    def __str__(self):
+        return "{0}: {1}".format(self.ingredient_name, self.amount)

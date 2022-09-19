@@ -2,6 +2,7 @@ import glob
 import imp
 import random
 from recipe import Recipe
+from ingredient import Ingredient
 
 class RecipeBook:
     """
@@ -9,10 +10,17 @@ class RecipeBook:
     """
 
     def __init__(self, inspiring_set_path):
+        """
+        Constructor for the RecipeBook class.
+        Args:
+            inspiring_set_path (str): the filepath for the folder containing the inspiring set of recipes to be used
+            as the initial population
+        """
         self.recipes = []
         self.inspiring_ingredients = set()
         self.total_recipes_created = 0
         self.initialize_recipe_book(inspiring_set_path)
+
 
     def initialize_recipe_book(self, filepath):
         """
@@ -26,12 +34,12 @@ class RecipeBook:
 
         for filename in glob.glob(filepath + "/*.txt"):
             with open(filename) as file:
-                current_ingredients = {}
+                current_ingredients = []
                 for line in file.readlines():
                     amount, ingredient = line.split("oz")
                     ingredient = ingredient.strip()
+                    current_ingredients.append(Ingredient(ingredient, float(amount)))
                     self.inspiring_ingredients.add(ingredient)
-                    current_ingredients[ingredient] = float(amount)
                 self.recipes.append(Recipe(current_ingredients, "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients))
                 self.total_recipes_created += 1
         self.inspiring_ingredients = list(self.inspiring_ingredients)
@@ -57,7 +65,7 @@ class RecipeBook:
 
         """
 
-        newRecipe = new Recipe()
+        newRecipe = Recipe()
 
         pivot = random.randint(len(recipeOne))
 

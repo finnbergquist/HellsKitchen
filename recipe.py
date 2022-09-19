@@ -79,4 +79,4 @@ class Recipe:
         return
 
     def __str__(self):
-        return self.name + ": " + str(self.ingredients)
+        return self.name + ": " + ", ".join([str(ingredient) for ingredient in self.ingredients])
