@@ -1,4 +1,5 @@
 import random
+import ingredient
 
 class Recipe:
     """
@@ -19,8 +20,8 @@ class Recipe:
 
             name (str): the name of the recipe
         """
-        self.inspiring_ingredients = list(inspiring_ingredients)
-        self.ingredients = ingredients
+        self.inspiring_ingredients = inspiring_ingredients# set of ingredient_names
+        self.ingredients = ingredients # list of ingredient objects
         self.name = name
 
     def fitness(self):
@@ -40,6 +41,26 @@ class Recipe:
             ingredient.amount = (100./total_amount)*ingredient.amount
 
         return
+
+    def available_ingredients(self):
+        '''
+        Looks at all the inspiring ingredients, and chooses an ingredient from that list which is not already
+        in the recipe.
+
+        Return:
+            available_ingredients(list) : list of ingredient objects
+        '''
+        used_ingredient_names = set()
+
+        for ingredient in self.ingredients:
+            used_ingredient_names.add(ingredient.name)
+
+        available_ingredient_names = self.inspiring_ingredients - used_ingredient_names
+
+        return list(available_ingredient_names)
+
+        
+
 
     def mutate(self, recipe):
         """
@@ -67,13 +88,24 @@ class Recipe:
         #Type1
         if mutation_number<=0.25:
             ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            random_amount = random.random(0,100)#number of ounces
+            random_amount = random.random(1,80)#number of ounces, max of 80
             self.ingredients[ingredient_to_change_index].amount = random_amount
             self.normalize()
         #Type2
-        elif mutation_number<0.25<=0.5: #might need to change this so that it does not choose an ingredient not already in recipe
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            self.ingredients[ingredient_to_change_index].ingredient_name = random.choice(self.inspiring_ingredients)
+        elif 0.25<mutation_number<=0.5: #might need to change this so that it does not choose an ingredient already in recipe
+            ingredient_to_change_index = random.randint(0, len(self.ingredients))            
+            self.ingredients[ingredient_to_change_index].ingredient_name = random.choice(self.available_ingredients())
+        #Type3
+        elif 0.5<mutation_number<=0.75:
+            ingredient_name = random.choice(self.available_ingredients())
+            amount = random.random(1,80)#number of ounces of new ingredinet
+            new_ingredient = ingredient.Ingredient(ingredient_name, amount)
+            self.ingredients.append(new_ingredient)
+            self.normalize()
+        else:
+            
+
+
 
  
         return
