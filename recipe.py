@@ -1,5 +1,5 @@
 import random
-import ingredient
+import Ingredient
 
 class Recipe:
     """
@@ -20,7 +20,7 @@ class Recipe:
 
             name (str): the name of the recipe
         """
-        self.inspiring_ingredients = inspiring_ingredients# set of ingredient_names
+        self.inspiring_ingredients = inspiring_ingredients # set of ingredient_names
         self.ingredients = ingredients # list of ingredient objects
         self.name = name
 
