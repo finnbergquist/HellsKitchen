@@ -103,7 +103,11 @@ class Recipe:
             self.ingredients.append(new_ingredient)
             self.normalize()
         else:
-            
+            ingredient_to_change_index = random.randint(0, len(self.ingredients))
+            self.ingredients.remove()        
+
+
+
 
 
 
