@@ -1,5 +1,5 @@
 import random
-import ingredient
+import Ingredient
 
 class Recipe:
     """
@@ -20,7 +20,7 @@ class Recipe:
 
             name (str): the name of the recipe
         """
-        self.inspiring_ingredients = inspiring_ingredients# set of ingredient_names
+        self.inspiring_ingredients = inspiring_ingredients # set of ingredient_names
         self.ingredients = ingredients # list of ingredient objects
         self.name = name
 
@@ -99,7 +99,7 @@ class Recipe:
         elif 0.5<mutation_number<=0.75:
             ingredient_name = random.choice(self.available_ingredients())
             amount = random.random(1,80)#number of ounces of new ingredinet
-            new_ingredient = ingredient.Ingredient(ingredient_name, amount)
+            new_ingredient = self.ingredient.Ingredient(ingredient_name, amount)
             self.ingredients.append(new_ingredient)
             self.normalize()
         else:
@@ -112,7 +112,7 @@ class Recipe:
 
 
  
-        return
+            return 0
 
     def __str__(self):
         return self.name + ": " + ", ".join([str(ingredient) for ingredient in self.ingredients])
