@@ -1,5 +1,4 @@
 import glob
-import imp
 import random
 from recipe import Recipe
 from ingredient import Ingredient
@@ -9,7 +8,7 @@ class RecipeBook:
     Holds a list of all current recipes.
     """
 
-    def __init__(self, inspiring_set_path):
+    def __init__(self, inspiring_set_path='inspiring_set'):
         """
         Constructor for the RecipeBook class.
         Args:
@@ -91,4 +90,18 @@ class RecipeBook:
     def __str__(self):
         return str("\n".join([str(recipe) for recipe in self.recipes]))
 
-    
+
+
+#Finn testing code
+
+#recipeBook = RecipeBook()
+'''print(recipeBook.inspiring_ingredients)
+print(recipeBook.recipes)'''
+
+#recipe = recipeBook.recipes[0]
+
+#print(recipe)
+
+#recipe.mutate()
+
+#print(recipe)
