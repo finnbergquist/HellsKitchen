@@ -8,7 +8,7 @@ class RecipeBook:
     Holds a list of all current recipes.
     """
 
-    def __init__(self, inspiring_set_path='inspiring_set'):
+    def __init__(self, inspiring_set_path):
         """
         Constructor for the RecipeBook class.
         Args:
@@ -41,67 +41,75 @@ class RecipeBook:
                     self.inspiring_ingredients.add(ingredient)
                 self.recipes.append(Recipe(current_ingredients, "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients))
                 self.total_recipes_created += 1
-        self.inspiring_ingredients = list(self.inspiring_ingredients)
 
 
+    def generateIteration(self):
+        self.selection() #sorts recipes by fitness
+        self.recipes = self.recombination()
+        for individual in self.recipes:
+            individual.mutate()
+        
+        
     def selection(self):
         """ Method for selecting individuals for the breeding pool. 
 
         Args:
         """
+        
         return
     
-    def recombination(self, recipeOne, recipeTwo):
-        """Implements recombination using OnePoint crossover, a technique that will
-        randomly select a pivot index in the ingredient list of each recipe, 
-        thus dividing each recipe into two sub-lists of ingredients. 
-        A new recipe is then created by combining the first sub-list of the first recipe
-        with the second sub-list of the second recipe.
-        Args:
-        recipeOne (recipe): first recipe 
-
-        recipeTwo (reicpe): second recipe 
-
+    def recombination(self, recipe_one, recipe_two):
         """
+        Returns a new recipe that results from recombination using the process from PIERRE. Given two recipes pivot index 
+        is randomly selected in the ingredient list of each one, which divides each recipe into two sub-lists of ingredients. 
+        A new recipe is created by combining the left sub-list of the first recipe and the right sub-list of the second recipe.
 
-        newRecipe = Recipe()
+        If there are duplicate ingredients in the new recipe, they are replaced with one ingredient with the same name its amount
+        is the sum of each instance's amount of the ingredient. 
+        Args:
+            recipe_one (Recipe): the first recipe 
+            recipe_two (Reicpe): the second recipe 
+        """
+        ingredients = []
+        ingredient_indices = {}
 
-        pivot = random.randint(len(recipeOne))
+        pivot_one = random.randint(0, len(recipe_one.ingredients) - 1)
+        pivot_two = random.randint(0, len(recipe_two.ingredients) - 1)
+        
+        for i in range(0, pivot_one + len(recipe_two.ingredients) - pivot_two):
+            # Get the current ingredient that will be added to the new recipe
+            current_ingredient = None
+            if i <= pivot_one:
+                current_ingredient = recipe_one.ingredients[i]
+            else:
+                current_ingredient = recipe_two.ingredients[i - pivot_one + pivot_two]
 
-        for i in range(0, pivot):
-            newRecipe.append(recipeOne[i])
-        for j in range(pivot +1, len(recipeTwo)):
-            newRecipe.append(recipeOne[j])
+            if current_ingredient.name not in ingredient_indices:
+                ingredients.append(current_ingredient)
+                ingredient_indices[current_ingredient.name] = i
+            else:
+                # If the ingredient name is already in the current recipe, add the current ingredient's amount to it instead
+                # of appending it as a new ingredient 
+                current_ingredient_index = ingredient_indices[current_ingredient.name]
+                ingredients[current_ingredient_index].amount += current_ingredient.amount
 
+        new_recipe = Recipe(ingredients, "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients)
+        self.total_recipes_created += 1
+        
+        return new_recipe
 
-        RecipeBook.add(newRecipe)
-
-
-        return newRecipe
 
     def mutation(self):
         """Iterate through all the recipes and call recipe.mutate()"""
         return
 
     def sort_fitness(self):
-        """Sorts the fitness of each recipe based on """
-        return
+        """
+        Sorts each recipe in the population according to its fitness (degree of ingredient variety).
+        """
+        self.recipes.sort(key = lambda recipe: recipe.get_fitness())
 
     def __str__(self):
         return str("\n".join([str(recipe) for recipe in self.recipes]))
 
-
-
-#Finn testing code
-
-#recipeBook = RecipeBook()
-'''print(recipeBook.inspiring_ingredients)
-print(recipeBook.recipes)'''
-
-#recipe = recipeBook.recipes[0]
-
-#print(recipe)
-
-#recipe.mutate()
-
-#print(recipe)
+    

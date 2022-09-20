@@ -1,5 +1,5 @@
 import random
-import Ingredient
+from ingredient import Ingredient
 
 class Recipe:
     """
@@ -24,7 +24,7 @@ class Recipe:
         self.ingredients = ingredients # list of ingredient objects
         self.name = name
 
-    def fitness(self):
+    def get_fitness(self):
         return len(self.ingredients)
 
     def normalize(self):
@@ -53,7 +53,7 @@ class Recipe:
         used_ingredient_names = set()
 
         for ingredient in self.ingredients:
-            used_ingredient_names.add(ingredient.ingredient_name)
+            used_ingredient_names.add(ingredient.name)
 
         available_ingredient_names = self.inspiring_ingredients - used_ingredient_names
 
@@ -102,13 +102,13 @@ class Recipe:
         elif 0.25<mutation_number<=0.5: 
             print('TYPE2')
             ingredient_to_change_index = random.randint(0, len(self.ingredients))            
-            self.ingredients[ingredient_to_change_index].ingredient_name = random.choice(self.available_ingredients())
+            self.ingredients[ingredient_to_change_index].name = random.choice(self.available_ingredients())
         #Type3
         elif 0.5<mutation_number<=0.75:
             print('TYPE3')
             ingredient_name = random.choice(self.available_ingredients())
             amount = random.randrange(1,80)#number of ounces of new ingredinet
-            new_ingredient = ingredient.Ingredient(ingredient_name, amount)
+            new_ingredient = Ingredient(ingredient_name, amount)
             self.ingredients.append(new_ingredient)
             self.normalize()
         #Type4
