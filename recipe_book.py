@@ -90,15 +90,15 @@ class RecipeBook:
 
         Args:
         """
-        
+        breedingPool = []
         #n = len(self.recipes)
         # Use the gauss formula to get the sum of all ranks (sum of integers 1 to N).
         sumRank = (bookLength * (bookLength+1)) / 2
 
         for rank, ind_fitness in enumerate(self.sort_fitness(self.recipes), 1):
-            return rank, ind_fitness, float(rank) / sumRank
+            breedingPool.append(rank, ind_fitness, (float(rank) / sumRank))
 
-        return 
+        return breedingPool
     
     def recombination(self, breedingPool):
         
