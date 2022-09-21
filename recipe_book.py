@@ -46,6 +46,11 @@ class RecipeBook:
         self.inspiring_ingredients = list(self.inspiring_ingredients)
 
     def runGeneration(self):
+        """
+        
+        Args:
+
+        """
         curr_top_50 = []
         self.sort_fitness(self.recipes)
         curr_top_50.append(self.recipes[0])
@@ -77,78 +82,23 @@ class RecipeBook:
 
         print(self.recipes)
 
-    """
-    private void Rank() {
-            
-            double sumRank = ((1 + population.size()) / (double) 2) * population.size(); // arithmetic series formula for the sum
-            List <Double> probabilityArray = new ArrayList<Double>();
-            
-            sortByFitness(population, 0, population.size()-1); 
 
-            //probability for each individual to get selected, is stored in probability array.
-            //least fit individual also has least probability of getting selected for the breeding pool.
-            for (int i = 0; i < population.size(); i++) {
-                //place probability of selecting an individual for the breeding pool in probabilityArray
-                //the index position of probability array corresponds to rank
-                if (i == 0) {
-                    probabilityArray.add(i/sumRank); 
-                } else {
-                    probabilityArray.add((i/sumRank) + probabilityArray.get(i-1));
-                    //System.out.println( "um" + population.size()); 
-                }
-            }
-
-            //selects individual from the population based on probability calculated from rank
-            while (breedingPool.size() != population.size()) {
-                int i = 0; 
-                double r = random.nextDouble();
-                
-                //find index i in probablityArray such that ProbabilityArray[i-1] < RandomNumber < ProbabilityArray[i]
-                while (probabilityArray.get(i) < r) {
-                    //if random number is higher than the last element in the array, 
-                    //break the loop to generate new random number, and go through from the beginning again. 
-                    if (i == population.size()-1) {
-                        break; 
-                    } 
-                    i++; 
-                }
-                
-                if (probabilityArray.get(i) >= r) {
-                    //add to the breeding pool based on probability of selection as calculated and stored in probabilityArray.
-                    breedingPool.add(population.get(i)); 
-
-    """
-
-    def selection(self):
+    def selection(self, bookLength):
         """ Method for selecting individuals for the breeding pool. 
+        Returns the index corresponding to the selected individual 
+        where each individual has a weight corresponding to its position in sorted order.
 
         Args:
         """
-
-        #sumRank = ((1 + len(RecipeBook)) / (Double) 2) * len(RecipeBook)
-        probabilityArray = []
-        self.sort_fitness(len(RecipeBook))
-
-        self.sort_fitness(RecipeBook)
-        return
         
-    def rankSelection(self):
-        
-        return
+        #n = len(self.recipes)
+        # Use the gauss formula to get the sum of all ranks (sum of integers 1 to N).
+        sumRank = (bookLength * (bookLength+1)) / 2
 
+        for rank, ind_fitness in enumerate(self.sort_fitness(self.recipes), 1):
+            return rank, ind_fitness, float(rank) / sumRank
 
-    def truncSelection(self):
-
-        """ Method for selecting individuals for the breeding pool. 
-        Args:
-        """
-        self.sort_fitness(RecipeBook)
-        truncateIndex = math.toIntExact(math.round(.2*(len(RecipeBook))))
-        for i in range(len(RecipeBook)):
-            randSelection = random.randint(truncateIndex) + (len(RecipeBook) - truncateIndex)
-            self.add(RecipeBook.get(randSelection))
-
-        return
+        return 
     
     def recombination(self, breedingPool):
         
