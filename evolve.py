@@ -12,7 +12,7 @@ def main():
     #Step 2: Loop
     iteration = 0
     while iteration < num_generations:
-        population.generateIteration()
+        population.runGeneration()
         iteration += 1
 
 

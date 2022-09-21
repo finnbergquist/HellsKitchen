@@ -48,27 +48,37 @@ class RecipeBook:
                 self.total_recipes_created += 1
         self.inspiring_ingredients = list(self.inspiring_ingredients)
 
-    def generateIteration(self):
-        #self.selection() #sorts recipes by fitness
-        newPopulation = []
-        newPopulation.append(self.recipes[0]) #keep top 3 fittest in next population
-        newPopulation.append(self.recipes[1])
-        newPopulation.append(self.recipes[2])
+    def runGeneration(self):
+        curr_top_50 = []
+        self.sort_fitness(self.recipes)
+        curr_top_50.append(self.recipes[0])
+        curr_top_50.append(self.recipes[1])
+        curr_top_50.append(self.recipes[2])
         
-        newPopulation.append(Recipe(self.recombination(getattr(self.recipes[0], 'ingredients'), getattr(self.recipes[1], 'ingredients')), "recipe_number_{0}".format(len(newPopulation)+1), self.inspiring_ingredients))
-        newPopulation.append(Recipe(self.recombination(getattr(self.recipes[1], 'ingredients'), getattr(self.recipes[2], 'ingredients')), "recipe_number_{0}".format(len(newPopulation)+1), self.inspiring_ingredients))
-        newPopulation.append(Recipe(self.recombination(getattr(self.recipes[0], 'ingredients'), getattr(self.recipes[2], 'ingredients')), "recipe_number_{0}".format(len(newPopulation)+1), self.inspiring_ingredients))
+        #breedingPool = self.selection()
         
-        print(newPopulation)
-        count=0
-        for individual in newPopulation:
-            print(count, individual)
-            count+=1
-            #individual.mutate(individual)
-            
-        self.recipes.clear()
-        self.recipes = newPopulation
+        #RECOMBINATION
+        #offsprings = self.recombination(breedingPool)
+        offsprings = self.recombination(self.recipes)
 
+        #MUTATION
+        for individual in offsprings:
+            individual.mutate(individual)
+            
+        #Sort recipes by fitness - most fit to least fit
+        self.sort_fitness(offsprings)
+        
+        #Set new population - top 50% from old and new pool
+        self.recipes.clear()
+        for recipe in curr_top_50:
+            self.recipes.append(recipe)
+        
+        print(offsprings)
+        self.recipes.append(offsprings[0])
+        self.recipes.append(offsprings[1])
+        self.recipes.append(offsprings[2])
+
+        print(self.recipes)
 
     """
     private void Rank() {
@@ -111,10 +121,6 @@ class RecipeBook:
                     breedingPool.add(population.get(i)); 
 
     """
-        
-    def rankSelection(self):
-        
-        return
 
     def selection(self):
         """ Method for selecting individuals for the breeding pool. 
@@ -127,6 +133,10 @@ class RecipeBook:
         self.sort_fitness(len(RecipeBook))
 
         self.sort_fitness(RecipeBook)
+        return
+        
+    def rankSelection(self):
+        
         return
 
 
@@ -143,7 +153,8 @@ class RecipeBook:
 
         return
     
-    def recombination(self, recipeOne, recipeTwo):
+    def recombination(self, breedingPool):
+        
         """Implements recombination using OnePoint crossover, a technique that will
         randomly select a pivot index in the ingredient list of each recipe, 
         thus dividing each recipe into two sub-lists of ingredients. 
@@ -156,35 +167,41 @@ class RecipeBook:
         recipeTwo (recipe): second recipe 
 
         """
-        recipeOffspring = [] #empty list of ingredients objects
-        pivot = 0
-
-        if (len(recipeOne) <= len(recipeTwo)):
-            pivot = random.randint(1, len(recipeOne))
-        else:
-            pivot = random.randint(1, len(recipeTwo))
+        newPopulation = []
         
-        print("Pivot", pivot)
-        print("recipeOne", recipeOne)
+        index = 0
+        while (index > len(breedingPool)):
+            offspring = Recipe(self.crossover(breedingPool[index], breedingPool[index+1]), "recipe_number_{0}".format(len(newPopulation), self.inspiring_ingredients))
+            newPopulation.append(offspring)
+            index += 2
+            
+        return newPopulation
+        
+
+    def crossover(self, recipeOne, recipeTwo):
+        offspringIngredients = [] #empty list of ingredients objects
+
+        pivot1 = random.randint(1, len(recipeOne))
+        pivot2 = random.randint(1, len(recipeTwo))
         
         #CHECK FOR DUPLICATES
         duplicates = set()
-        for i in range(0, pivot):
+        for i in range(0, pivot1):
             ingredient_name = getattr(recipeOne[i], 'name')
             ingredient_amount = getattr(recipeOne[i], 'amount')
             newIngredient = Ingredient(ingredient_name, ingredient_amount)
-            recipeOffspring.append(newIngredient)
+            offspringIngredients.append(newIngredient)
             duplicates.add(ingredient_name)
-        for j in range(pivot, len(recipeTwo)):
+        for j in range(pivot2, len(recipeTwo)):
             ingredient_name = getattr(recipeTwo[j], 'name')
             ingredient_amount = getattr(recipeTwo[j], 'amount')
             if (ingredient_name not in duplicates):
                 newIngredient = Ingredient(ingredient_name, ingredient_amount)
-                recipeOffspring.append(newIngredient)
+                offspringIngredients.append(newIngredient)
 
-        return recipeOffspring
-
-    def sort_fitness(self):
+        return offspringIngredients
+   
+    def sort_fitness(self, recipes):
         """Sorts the fitness of each recipe based on """
         return
 

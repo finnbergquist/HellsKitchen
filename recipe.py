@@ -20,11 +20,11 @@ class Recipe:
 
             name (str): the name of the recipe
         """
-        self.inspiring_ingredients = inspiring_ingredients # set of ingredient_names
+        self.inspiring_ingredients = inspiring_ingredients# set of ingredient_names
         self.ingredients = ingredients # list of ingredient objects
         self.name = name
 
-    def get_fitness(self):
+    def fitness(self):
         return len(self.ingredients)
 
     def normalize(self):
@@ -59,10 +59,8 @@ class Recipe:
 
         return list(available_ingredient_names)
 
-        
 
-
-    def mutate(self):
+    def mutate(self, recipe):
         """
         Based on random probability, choose whether or not we will mutate
 
@@ -75,49 +73,41 @@ class Recipe:
             3: addition of an ingredient, renormalize
 
             4: deletion of an ingredient, renormalize
-
-        Args: 
-            None
-        Return:
-            None
         """
         mutation_probability = 0.2
 
         #Step 1: Decide if we will mutate
-        if random.random() > mutation_probability:
-            print('NO MUTATION') 
-            return
+        if random.random() > mutation_probability: 
+            return recipe
 
         #Step 2: Choose which type of mutation
         mutation_number = random.random()
 
         #Type1
         if mutation_number<=0.25:
-            print('TYPE1')
             ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            random_amount = random.randrange(1,80)#number of ounces, max of 80
+            random_amount = random.random(1,80)#number of ounces, max of 80
             self.ingredients[ingredient_to_change_index].amount = random_amount
             self.normalize()
         #Type2
-        elif 0.25<mutation_number<=0.5: 
-            print('TYPE2')
+        elif 0.25<mutation_number<=0.5: #might need to change this so that it does not choose an ingredient already in recipe
             ingredient_to_change_index = random.randint(0, len(self.ingredients))            
-            self.ingredients[ingredient_to_change_index].name = random.choice(self.available_ingredients())
+            self.ingredients[ingredient_to_change_index].ingredient_name = random.choice(self.available_ingredients())
         #Type3
         elif 0.5<mutation_number<=0.75:
-            print('TYPE3')
             ingredient_name = random.choice(self.available_ingredients())
-            amount = random.randrange(1,80)#number of ounces of new ingredinet
-            new_ingredient = Ingredient(ingredient_name, amount)
+            amount = random.random(1,80)#number of ounces of new ingredinet
+            new_ingredient = Ingredient.Ingredient(ingredient_name, amount)
             self.ingredients.append(new_ingredient)
             self.normalize()
-        #Type4
         else:
-            print('TYPE4')
             ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            self.ingredients.pop(ingredient_to_change_index)        
-            self.normalize()
+            self.ingredients.remove(ingredient_to_change_index)        
+
         return
+    
+    def getIngredients(self):
+        return self.ingredients
 
     def __str__(self):
         return self.name + ": " + ", ".join([str(ingredient) for ingredient in self.ingredients])
