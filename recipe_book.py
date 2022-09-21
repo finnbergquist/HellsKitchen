@@ -1,4 +1,7 @@
+from curses import newpad
 import glob
+from hashlib import new
+import imp
 import random
 import math
 from tokenize import Double
@@ -43,71 +46,87 @@ class RecipeBook:
                     self.inspiring_ingredients.add(ingredient)
                 self.recipes.append(Recipe(current_ingredients, "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients))
                 self.total_recipes_created += 1
-
+        self.inspiring_ingredients = list(self.inspiring_ingredients)
 
     def generateIteration(self):
-        self.selection() #sorts recipes by fitness
-        self.recipes = self.recombination()
-        for individual in self.recipes:
-            individual.mutate()
-
-"""
-  private void Rank() {
+        #self.selection() #sorts recipes by fitness
+        newPopulation = []
+        newPopulation.append(self.recipes[0]) #keep top 3 fittest in next population
+        newPopulation.append(self.recipes[1])
+        newPopulation.append(self.recipes[2])
         
-        double sumRank = ((1 + population.size()) / (double) 2) * population.size(); // arithmetic series formula for the sum
-        List <Double> probabilityArray = new ArrayList<Double>();
+        newPopulation.append(Recipe(self.recombination(getattr(self.recipes[0], 'ingredients'), getattr(self.recipes[1], 'ingredients')), "recipe_number_{0}".format(len(newPopulation)+1), self.inspiring_ingredients))
+        newPopulation.append(Recipe(self.recombination(getattr(self.recipes[1], 'ingredients'), getattr(self.recipes[2], 'ingredients')), "recipe_number_{0}".format(len(newPopulation)+1), self.inspiring_ingredients))
+        newPopulation.append(Recipe(self.recombination(getattr(self.recipes[0], 'ingredients'), getattr(self.recipes[2], 'ingredients')), "recipe_number_{0}".format(len(newPopulation)+1), self.inspiring_ingredients))
         
-        sortByFitness(population, 0, population.size()-1); 
-
-        //probability for each individual to get selected, is stored in probability array.
-        //least fit individual also has least probability of getting selected for the breeding pool.
-        for (int i = 0; i < population.size(); i++) {
-            //place probability of selecting an individual for the breeding pool in probabilityArray
-            //the index position of probability array corresponds to rank
-            if (i == 0) {
-                probabilityArray.add(i/sumRank); 
-            } else {
-                probabilityArray.add((i/sumRank) + probabilityArray.get(i-1));
-                //System.out.println( "um" + population.size()); 
-            }
-        }
-
-        //selects individual from the population based on probability calculated from rank
-        while (breedingPool.size() != population.size()) {
-            int i = 0; 
-            double r = random.nextDouble();
+        print(newPopulation)
+        count=0
+        for individual in newPopulation:
+            print(count, individual)
+            count+=1
+            #individual.mutate(individual)
             
-            //find index i in probablityArray such that ProbabilityArray[i-1] < RandomNumber < ProbabilityArray[i]
-            while (probabilityArray.get(i) < r) {
-                //if random number is higher than the last element in the array, 
-                //break the loop to generate new random number, and go through from the beginning again. 
-                if (i == population.size()-1) {
-                    break; 
-                } 
-                i++; 
-            }
-            
-            if (probabilityArray.get(i) >= r) {
-                //add to the breeding pool based on probability of selection as calculated and stored in probabilityArray.
-                breedingPool.add(population.get(i)); 
+        self.recipes.clear()
+        self.recipes = newPopulation
 
-"""  
+
+    """
+    private void Rank() {
+            
+            double sumRank = ((1 + population.size()) / (double) 2) * population.size(); // arithmetic series formula for the sum
+            List <Double> probabilityArray = new ArrayList<Double>();
+            
+            sortByFitness(population, 0, population.size()-1); 
+
+            //probability for each individual to get selected, is stored in probability array.
+            //least fit individual also has least probability of getting selected for the breeding pool.
+            for (int i = 0; i < population.size(); i++) {
+                //place probability of selecting an individual for the breeding pool in probabilityArray
+                //the index position of probability array corresponds to rank
+                if (i == 0) {
+                    probabilityArray.add(i/sumRank); 
+                } else {
+                    probabilityArray.add((i/sumRank) + probabilityArray.get(i-1));
+                    //System.out.println( "um" + population.size()); 
+                }
+            }
+
+            //selects individual from the population based on probability calculated from rank
+            while (breedingPool.size() != population.size()) {
+                int i = 0; 
+                double r = random.nextDouble();
+                
+                //find index i in probablityArray such that ProbabilityArray[i-1] < RandomNumber < ProbabilityArray[i]
+                while (probabilityArray.get(i) < r) {
+                    //if random number is higher than the last element in the array, 
+                    //break the loop to generate new random number, and go through from the beginning again. 
+                    if (i == population.size()-1) {
+                        break; 
+                    } 
+                    i++; 
+                }
+                
+                if (probabilityArray.get(i) >= r) {
+                    //add to the breeding pool based on probability of selection as calculated and stored in probabilityArray.
+                    breedingPool.add(population.get(i)); 
+
+    """
         
     def rankSelection(self):
+        
+        return
+
+    def selection(self):
         """ Method for selecting individuals for the breeding pool. 
 
         Args:
         """
 
-        sumRank = ((1 + len(RecipeBook)) / (Double) 2) * len(RecipeBook)
+        #sumRank = ((1 + len(RecipeBook)) / (Double) 2) * len(RecipeBook)
         probabilityArray = []
-        sort_fitness(len(RecipeBook))
-        
+        self.sort_fitness(len(RecipeBook))
 
-        
-        ((1 + len(RecipeBook)) / (Double) 2) * len(RecipeBook)
-
-        sort_fitness(RecipeBook)
+        self.sort_fitness(RecipeBook)
         return
 
 
@@ -116,7 +135,7 @@ class RecipeBook:
         """ Method for selecting individuals for the breeding pool. 
         Args:
         """
-        sort_fitness(RecipeBook)
+        self.sort_fitness(RecipeBook)
         truncateIndex = math.toIntExact(math.round(.2*(len(RecipeBook))))
         for i in range(len(RecipeBook)):
             randSelection = random.randint(truncateIndex) + (len(RecipeBook) - truncateIndex)
@@ -124,58 +143,50 @@ class RecipeBook:
 
         return
     
-    def recombination(self, recipe_one, recipe_two):
-
-        """
-        Returns a new recipe that results from recombination using the process from PIERRE. Given two recipes pivot index 
-        is randomly selected in the ingredient list of each one, which divides each recipe into two sub-lists of ingredients. 
-        A new recipe is created by combining the left sub-list of the first recipe and the right sub-list of the second recipe.
-
-        If there are duplicate ingredients in the new recipe, they are replaced with one ingredient with the same name its amount
-        is the sum of each instance's amount of the ingredient. 
+    def recombination(self, recipeOne, recipeTwo):
+        """Implements recombination using OnePoint crossover, a technique that will
+        randomly select a pivot index in the ingredient list of each recipe, 
+        thus dividing each recipe into two sub-lists of ingredients. 
+        A new recipe is then created by combining the first sub-list of the first recipe
+        with the second sub-list of the second recipe.
         Args:
-            recipe_one (Recipe): the first recipe 
-            recipe_two (Reicpe): the second recipe 
+        recipeOne (list of Ingredient obj): first recipe 
+        recipeOne[i] (ingredient)
+
+        recipeTwo (recipe): second recipe 
+
         """
+        recipeOffspring = [] #empty list of ingredients objects
+        pivot = 0
 
-        ingredients = []
-        ingredient_indices = {}
-
-        pivot_one = random.randint(0, len(recipe_one.ingredients) - 1)
-        pivot_two = random.randint(0, len(recipe_two.ingredients) - 1)
+        if (len(recipeOne) <= len(recipeTwo)):
+            pivot = random.randint(1, len(recipeOne))
+        else:
+            pivot = random.randint(1, len(recipeTwo))
         
-        for i in range(0, pivot_one + len(recipe_two.ingredients) - pivot_two):
-            # Get the current ingredient that will be added to the new recipe
-            current_ingredient = None
-            if i <= pivot_one:
-                current_ingredient = recipe_one.ingredients[i]
-            else:
-                current_ingredient = recipe_two.ingredients[i - pivot_one + pivot_two]
-
-            if current_ingredient.name not in ingredient_indices:
-                ingredients.append(current_ingredient)
-                ingredient_indices[current_ingredient.name] = i
-            else:
-                # If the ingredient name is already in the current recipe, add the current ingredient's amount to it instead
-                # of appending it as a new ingredient 
-                current_ingredient_index = ingredient_indices[current_ingredient.name]
-                ingredients[current_ingredient_index].amount += current_ingredient.amount
-
-        new_recipe = Recipe(ingredients, "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients)
-        self.total_recipes_created += 1
+        print("Pivot", pivot)
+        print("recipeOne", recipeOne)
         
-        return new_recipe
+        #CHECK FOR DUPLICATES
+        duplicates = set()
+        for i in range(0, pivot):
+            ingredient_name = getattr(recipeOne[i], 'name')
+            ingredient_amount = getattr(recipeOne[i], 'amount')
+            newIngredient = Ingredient(ingredient_name, ingredient_amount)
+            recipeOffspring.append(newIngredient)
+            duplicates.add(ingredient_name)
+        for j in range(pivot, len(recipeTwo)):
+            ingredient_name = getattr(recipeTwo[j], 'name')
+            ingredient_amount = getattr(recipeTwo[j], 'amount')
+            if (ingredient_name not in duplicates):
+                newIngredient = Ingredient(ingredient_name, ingredient_amount)
+                recipeOffspring.append(newIngredient)
 
-
-    def mutation(self):
-        """Iterate through all the recipes and call recipe.mutate()"""
-        return
+        return recipeOffspring
 
     def sort_fitness(self):
-        """
-        Sorts each recipe in the population according to its fitness (degree of ingredient variety).
-        """
-        self.recipes.sort(key = lambda recipe: recipe.get_fitness())
+        """Sorts the fitness of each recipe based on """
+        return
 
     def __str__(self):
         return str("\n".join([str(recipe) for recipe in self.recipes]))
