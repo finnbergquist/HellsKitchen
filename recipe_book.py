@@ -91,12 +91,19 @@ class RecipeBook:
         Args:
         """
         breedingPool = []
+        rankList = []
+        probabilityList = []
         #n = len(self.recipes)
         # Use the gauss formula to get the sum of all ranks (sum of integers 1 to N).
         sumRank = (bookLength * (bookLength+1)) / 2
 
         for rank, ind_fitness in enumerate(self.sort_fitness(self.recipes), 1):
-            breedingPool.append(rank, ind_fitness, (float(rank) / sumRank))
+
+            rankList.append(rank, ind_fitness, (float(rank) / sumRank))
+            probabilityList.append((float(rank) / sumRank))
+        
+        for i in range(self.recipes):
+
 
         return breedingPool
     
@@ -150,6 +157,15 @@ class RecipeBook:
    
     def sort_fitness(self, recipes):
         """Sorts the fitness of each recipe based on """
+
+        n = len(recipes)
+        sumRank = (n * (n+1)) / 2
+        
+
+        for rank, ind_fitness in enumerate(self.sort_fitness(self.recipes), 1):
+
+            rankList.append(rank, ind_fitness, (float(rank) / sumRank))
+            probabilityList.append((float(rank) / sumRank))
         return
 
     def __str__(self):
