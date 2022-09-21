@@ -65,7 +65,7 @@ class RecipeBook:
 
         #MUTATION
         for individual in offsprings:
-            individual.mutate(individual)
+            individual.mutate()
             
         #Sort recipes by fitness - most fit to least fit
         self.sort_fitness(offsprings)
@@ -172,15 +172,3 @@ class RecipeBook:
         return str("\n".join([str(recipe) for recipe in self.recipes]))
 
 
-
-
-'''#Finn's testing code:
-
-book = RecipeBook('inspiring_set')
-print(book.recipes[0])
-
-for i in range(0,500):   
-    book.recipes[0].mutate()
-
-print(book.recipes[0])
-'''
