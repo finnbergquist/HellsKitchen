@@ -11,12 +11,13 @@ class Recipe:
 
 
     def __init__(self, ingredients, name, inspiring_ingredients, mutation_probability=0.2):
-        """
-        Constructor for the recipe class.
+        """Constructor for the recipe class.
         Args:
             ingredients (list) : list of ingredient objects
             name (str): the name of the recipe
             inspiring_ingredients (set) : original set of all ingredients that can be used in mutation
+        Return:
+            None
         """
         self.inspiring_ingredients = inspiring_ingredients# set of ingredient_names
         self.ingredients = ingredients # list of ingredient objects
@@ -24,8 +25,7 @@ class Recipe:
         self.mutation_probability = mutation_probability
 
     def fitness(self):
-        '''
-        Fitness metric as specified in the requirements.
+        '''Fitness metric as specified in the requirements.
 
         Args: 
             None
@@ -36,8 +36,7 @@ class Recipe:
         return len(self.ingredients)
 
     def get_fitness(self):
-        '''
-        Fitness metric as specified in the requirements.
+        '''Fitness metric as specified in the requirements.
 
         Args: 
             None
@@ -48,8 +47,7 @@ class Recipe:
         return len(self.ingredients)
 
     def normalize(self):
-        '''
-        Sums the total amount of ingredients(in ounces). Then it multiplies each ingredient amount by
+        ''' Sums the total amount of ingredients(in ounces). Then it multiplies each ingredient amount by
         100/total volume so that the sum of all ingredients sums to 100 again. The self.ingredients list
         is modified.
 
@@ -73,6 +71,8 @@ class Recipe:
         Looks at all the inspiring ingredients, and chooses an ingredient from that list which is not already
         in the recipe. The edge case that there are no available ingredients is dealt with in the mutate method.
 
+        Args:
+            None
         Return:
             available_ingredients(list) : list of ingredient objects
         '''
@@ -99,6 +99,11 @@ class Recipe:
             3: addition of an ingredient, renormalize
 
             4: deletion of an ingredient, renormalize
+
+        Args:
+            None
+        Return:
+            None
         """
         mutation_probability = self.mutation_probability
 
