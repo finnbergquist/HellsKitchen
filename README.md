@@ -31,3 +31,14 @@ where:
 3. Output directory path is the filepath for the directory where the final recipes should be written to
 
 For example, the following command: `python3 evolve.py inspiring_set output 10` would specify to run the program with the text files from the inspiring_set directory as the initial population for 10 generations and store the final recipes in a folder named output located in the current directory.
+
+
+## Authors
+
+Finn Bergquist
+
+Lily Smith
+
+Crystal Chong
+
+Souleman Toure
