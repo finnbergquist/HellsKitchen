@@ -1,10 +1,7 @@
 from curses import newpad
 import glob
-from hashlib import new
-import imp
 import random
 import math
-from tokenize import Double
 from recipe import Recipe
 from ingredient import Ingredient
 
@@ -208,3 +205,16 @@ class RecipeBook:
     def __str__(self):
         return str("\n".join([str(recipe) for recipe in self.recipes]))
 
+
+
+
+'''#Finn's testing code:
+
+book = RecipeBook('inspiring_set')
+print(book.recipes[0])
+
+for i in range(0,500):   
+    book.recipes[0].mutate()
+
+print(book.recipes[0])
+'''
