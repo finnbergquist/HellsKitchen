@@ -23,9 +23,18 @@ class Recipe:
         self.name = name
         self.mutation_probability = mutation_probability
 
-<<<<<<< HEAD
     def fitness(self):
-=======
+        '''
+        Fitness metric as specified in the requirements.
+
+        Args: 
+            None
+        Return:
+            number of ingredients (int)
+        '''
+
+        return len(self.ingredients)
+
     def get_fitness(self):
         '''
         Fitness metric as specified in the requirements.
@@ -36,7 +45,6 @@ class Recipe:
             number of ingredients (int)
         '''
 
->>>>>>> 97a23eb54e5d17412114b7b58a01f3e791bc98fd
         return len(self.ingredients)
 
     def normalize(self):
@@ -78,11 +86,7 @@ class Recipe:
         return list(available_ingredient_names)
 
 
-<<<<<<< HEAD
-    def mutate(self, recipe):
-=======
     def mutate(self):
->>>>>>> 97a23eb54e5d17412114b7b58a01f3e791bc98fd
         """
         Based on random probability, choose whether or not we will mutate
 
@@ -99,57 +103,26 @@ class Recipe:
         mutation_probability = self.mutation_probability
 
         #Step 1: Decide if we will mutate
-<<<<<<< HEAD
         if random.random() > mutation_probability: 
-            return recipe
-=======
-        if random.random() > mutation_probability:
-            #print('NO MUTATION') 
             return
->>>>>>> 97a23eb54e5d17412114b7b58a01f3e791bc98fd
 
         #Step 2: Choose which type of mutation
         mutation_number = random.random()
 
         #Type1
-<<<<<<< HEAD
-        if mutation_number<=0.25:
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            random_amount = random.random(1,80)#number of ounces, max of 80
-            self.ingredients[ingredient_to_change_index].amount = random_amount
-            self.normalize()
-        #Type2
-        elif 0.25<mutation_number<=0.5: #might need to change this so that it does not choose an ingredient already in recipe
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))            
-            self.ingredients[ingredient_to_change_index].ingredient_name = random.choice(self.available_ingredients())
-        #Type3
-        elif 0.5<mutation_number<=0.75:
-            ingredient_name = random.choice(self.available_ingredients())
-            amount = random.random(1,80)#number of ounces of new ingredinet
-            new_ingredient = Ingredient.Ingredient(ingredient_name, amount)
-            self.ingredients.append(new_ingredient)
-            self.normalize()
-        else:
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            self.ingredients.remove(ingredient_to_change_index)        
-
-=======
         if mutation_number<=0.25: 
-            #print('TYPE1')
             ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)
             random_amount = random.randrange(1,80)#number of ounces, max of 80
             self.ingredients[ingredient_to_change_index].amount = random_amount
             self.normalize()
         #Type2
         elif 0.25<mutation_number<=0.5: 
-            #print('TYPE2')
             ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)  
             available_ingredients = self.available_ingredients()
             if len(available_ingredients)>0:#If there are unused ingredients      
                 self.ingredients[ingredient_to_change_index].name = random.choice(self.available_ingredients())
         #Type3
         elif 0.5<mutation_number<=0.75:
-            #print('TYPE3')
             available_ingredients = self.available_ingredients()
             if len(available_ingredients)>0: #only proceed if there are unused ingredients
                 ingredient_name = random.choice(available_ingredients)
@@ -159,12 +132,11 @@ class Recipe:
                 self.normalize()
         #Type4
         else:
-            #print('TYPE4')
             ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)
             if len(self.ingredients) > 1: # don't remove the ingredient if it is the last one!
                 self.ingredients.pop(ingredient_to_change_index)        
             self.normalize()
->>>>>>> 97a23eb54e5d17412114b7b58a01f3e791bc98fd
+
         return
     
     def getIngredients(self):
