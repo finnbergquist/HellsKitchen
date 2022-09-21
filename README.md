@@ -1,4 +1,4 @@
-# CSCI 3725 - PQ1 Let's Get Cooking
+# Soup Recipe Generator
 ## Overview
 This program implements a simplified version of PIERRE (a genetic algorithm that generates soup recipes):
 http://computationalcreativity.net/iccc2012/wp-content/uploads/2012/05/119-Morris.pdf
@@ -30,7 +30,11 @@ where:
 2. Generations is the number of iterations the program should run for
 3. Output directory path is the filepath for the directory where the final recipes should be written to
 
-For example, the following command: `python3 evolve.py inspiring_set output 10` would specify to run the program with the text files from the inspiring_set directory as the initial population for 10 generations and store the final recipes in a folder named output located in the current directory.
+For example, the following command: 
+```
+python3 evolve.py inspiring_set output 10
+```
+would specify to run the program with the text files from the inspiring_set directory as the initial population for 10 generations and store the final recipes in a folder named output located in the current directory.
 
 
 ## Authors
