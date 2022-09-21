@@ -3,34 +3,48 @@ from ingredient import Ingredient
 
 class Recipe:
     """
-    Recipe represents a single recipe, with a dictionary that stores the ingredients.
+    Recipe represents a single recipe, with a list that stores its ingredients. It also must contain
+    a list of all the possible ingredient names(inspiring_ingredients), so that it can choose new ingredients
+    for mutation type 2 and 3. Finally, it also has a name to label the recipe.
 
-    key value pair ex:  ingredients['chicken'] = 10
     """
 
 
-    def __init__(self, ingredients, name, inspiring_ingredients):
+    def __init__(self, ingredients, name, inspiring_ingredients, mutation_probability=0.2):
         """
         Constructor for the recipe class.
         Args:
-            ingredients (dict - might change to list(Ingredient)): the list of all ingredients and amounts for the recipe
-                        ex.
-                            rice : 0.4
-                            beans : 0.6
-
+            ingredients (list) : list of ingredient objects
             name (str): the name of the recipe
+            inspiring_ingredients (set) : original set of all ingredients that can be used in mutation
         """
         self.inspiring_ingredients = inspiring_ingredients # set of ingredient_names
         self.ingredients = ingredients # list of ingredient objects
         self.name = name
+        self.mutation_probability = mutation_probability
 
     def get_fitness(self):
+        '''
+        Fitness metric as specified in the requirements.
+
+        Args: 
+            None
+        Return:
+            number of ingredients (int)
+        '''
+
         return len(self.ingredients)
 
     def normalize(self):
         '''
         Sums the total amount of ingredients(in ounces). Then it multiplies each ingredient amount by
-        100/total volume so that the sum of all ingredients sums to 100 again.
+        100/total volume so that the sum of all ingredients sums to 100 again. The self.ingredients list
+        is modified.
+
+        Args: 
+            None
+        Return:
+            None
         '''
 
         total_amount = 0.
@@ -45,7 +59,7 @@ class Recipe:
     def available_ingredients(self):
         '''
         Looks at all the inspiring ingredients, and chooses an ingredient from that list which is not already
-        in the recipe.
+        in the recipe. The edge case that there are no available ingredients is dealt with in the mutate method.
 
         Return:
             available_ingredients(list) : list of ingredient objects
@@ -58,8 +72,6 @@ class Recipe:
         available_ingredient_names = self.inspiring_ingredients - used_ingredient_names
 
         return list(available_ingredient_names)
-
-        
 
 
     def mutate(self):
@@ -81,43 +93,54 @@ class Recipe:
         Return:
             None
         """
-        mutation_probability = 0.2
+        mutation_probability = self.mutation_probability
 
         #Step 1: Decide if we will mutate
         if random.random() > mutation_probability:
-            print('NO MUTATION') 
+            #print('NO MUTATION') 
             return
 
         #Step 2: Choose which type of mutation
         mutation_number = random.random()
 
         #Type1
-        if mutation_number<=0.25:
-            print('TYPE1')
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))
+        if mutation_number<=0.25: 
+            #print('TYPE1')
+            ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)
             random_amount = random.randrange(1,80)#number of ounces, max of 80
             self.ingredients[ingredient_to_change_index].amount = random_amount
             self.normalize()
         #Type2
         elif 0.25<mutation_number<=0.5: 
-            print('TYPE2')
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))            
-            self.ingredients[ingredient_to_change_index].name = random.choice(self.available_ingredients())
+            #print('TYPE2')
+            ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)  
+            available_ingredients = self.available_ingredients()
+            if len(available_ingredients)>0:#If there are unused ingredients      
+                self.ingredients[ingredient_to_change_index].name = random.choice(self.available_ingredients())
         #Type3
         elif 0.5<mutation_number<=0.75:
-            print('TYPE3')
-            ingredient_name = random.choice(self.available_ingredients())
-            amount = random.randrange(1,80)#number of ounces of new ingredinet
-            new_ingredient = Ingredient(ingredient_name, amount)
-            self.ingredients.append(new_ingredient)
-            self.normalize()
+            #print('TYPE3')
+            available_ingredients = self.available_ingredients()
+            if len(available_ingredients)>0: #only proceed if there are unused ingredients
+                ingredient_name = random.choice(available_ingredients)
+                amount = random.randrange(1,80)#number of ounces of new ingredinet
+                new_ingredient = Ingredient(ingredient_name, amount)
+                self.ingredients.append(new_ingredient)
+                self.normalize()
         #Type4
         else:
-            print('TYPE4')
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            self.ingredients.pop(ingredient_to_change_index)        
+            #print('TYPE4')
+            ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)
+            if len(self.ingredients) > 1: # don't remove the ingredient if it is the last one!
+                self.ingredients.pop(ingredient_to_change_index)        
             self.normalize()
         return
 
     def __str__(self):
+        '''
+       using __str__ method of ingredients, and joining them all together 
+
+        Return:
+            Name (str) concatenated string of all ingredient names and ammounts
+        '''
         return self.name + ": " + ", ".join([str(ingredient) for ingredient in self.ingredients])
