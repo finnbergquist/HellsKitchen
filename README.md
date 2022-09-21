@@ -10,7 +10,7 @@ http://computationalcreativity.net/iccc2012/wp-content/uploads/2012/05/119-Morri
 
 * **Selection**: Each member is assessed according to a fitness function (in the program's case, this is the degree of ingredient variety). Recipes with high fitness scores are more likely to be chosen as future parents. Their probability of selection is proportional to their fitness. 
 
-* **Crossover**: New offspring are created by combining thh genetic information from the selected parents. In the context of the program, the genetic information of an individual is its list of ingredients. The ingredients before a random pivot in one recipe will now be merged with the ingredients after the random pivot from another recipe.
+* **Crossover**: New offspring are created by combining the genetic information from the selected parents. In the context of the program, the genetic information of an individual is its list of ingredients. The ingredients before a random pivot in one recipe will now be merged with the ingredients after the random pivot from another recipe.
 
 * **Mutation**: Introduce new variety into the population. Each recipe in the new generation is subject to a random chance of mutation, of which there are four types:
   
