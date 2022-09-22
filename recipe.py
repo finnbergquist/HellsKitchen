@@ -125,6 +125,14 @@ class Recipe:
         return
     
     def getIngredients(self):
+        """
+        Gets the list of ingrediants
+        Args:
+            None
+
+        Return: 
+            returns the list of ingrediants
+        """
         return self.ingredients
 
     def __str__(self):

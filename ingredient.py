@@ -15,9 +15,21 @@ class Ingredient():
         self.amount = amount
 
     def getName(self):
+        """
+        Args:
+            None
+        return:
+            returns name of ingredient
+        """
         return self.name
     
     def setName(self, newName):
+        """
+        Args:
+            newName (string) : New name that is given to ingrediant
+        return:
+            sets name of ingredient
+        """
         self.name = newName
     
     def __str__(self):

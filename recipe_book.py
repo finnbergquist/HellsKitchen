@@ -155,6 +155,7 @@ class RecipeBook:
     def sort_fitness(self, recipes):
         """ 
         Sorts the given list of recipes in descending order according to each recipe's fitness.
+        
         Args:
             recipes (list): the list of recipes to sort
         """
