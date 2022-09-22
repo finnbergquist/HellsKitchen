@@ -101,9 +101,10 @@ class RecipeBook:
                 break
             index += 1
 
+        self.recipes.sort(key = lambda recipe: -1 * recipe.get_fitness())
         return self.recipes[index]
 
-    def selection(self, bookLength):
+    def selection(self):
         """ Method for selecting individuals for the breeding pool. 
         Returns the index corresponding to the selected individual 
         where each individual has a weight corresponding to its position in sorted order.
