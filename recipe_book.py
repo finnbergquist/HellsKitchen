@@ -1,7 +1,11 @@
 from curses import newpad
 import glob
+from hashlib import new
+import imp
 import random
 import math
+from sys import orig_argv
+from tokenize import Double
 from recipe import Recipe
 from ingredient import Ingredient
 
@@ -46,66 +50,99 @@ class RecipeBook:
         self.inspiring_ingredients = list(self.inspiring_ingredients)
 
     def runGeneration(self):
-        """
-        
-        Args:
-
-        """
-        curr_top_50 = []
         self.sort_fitness(self.recipes)
-        curr_top_50.append(self.recipes[0])
-        curr_top_50.append(self.recipes[1])
-        curr_top_50.append(self.recipes[2])
-        
-        #breedingPool = self.selection()
+        originalRecipeBook = self.recipes.copy()
+       
+        #SELECTION
+        breedingPool = self.selection()
         
         #RECOMBINATION
-        #offsprings = self.recombination(breedingPool)
-        offsprings = self.recombination(self.recipes)
-
+        offsprings = self.recombination(breedingPool)
+        #offsprings = self.recombination(self.recipes).copy() #for testing
         #MUTATION
         for individual in offsprings:
             individual.mutate()
             
-        #Sort recipes by fitness - most fit to least fit
+        #Sort offsprings by fitness to take top 50%
         self.sort_fitness(offsprings)
         
         #Set new population - top 50% from old and new pool
         self.recipes.clear()
-        for recipe in curr_top_50:
-            self.recipes.append(recipe)
+        for i in range(0, 3):
+            self.recipes.append(originalRecipeBook[i])
         
-        print(offsprings)
-        self.recipes.append(offsprings[0])
-        self.recipes.append(offsprings[1])
-        self.recipes.append(offsprings[2])
+        for j in range(0, 3):
+            self.recipes.append(offsprings[j])
+        
+        return self.recipes
 
-        print(self.recipes)
+    """
+    private void Rank() {
+            
+            double sumRank = ((1 + population.size()) / (double) 2) * population.size(); // arithmetic series formula for the sum
+            List <Double> probabilityArray = new ArrayList<Double>();
+            
+            sortByFitness(population, 0, population.size()-1); 
 
+            //probability for each individual to get selected, is stored in probability array.
+            //least fit individual also has least probability of getting selected for the breeding pool.
+            for (int i = 0; i < population.size(); i++) {
+                //place probability of selecting an individual for the breeding pool in probabilityArray
+                //the index position of probability array corresponds to rank
+                if (i == 0) {
+                    probabilityArray.add(i/sumRank); 
+                } else {
+                    probabilityArray.add((i/sumRank) + probabilityArray.get(i-1));
+                    //System.out.println( "um" + population.size()); 
+                }
+            }
 
-    def selection(self, bookLength):
+            //selects individual from the population based on probability calculated from rank
+            while (breedingPool.size() != population.size()) {
+                int i = 0; 
+                double r = random.nextDouble();
+                
+                //find index i in probablityArray such that ProbabilityArray[i-1] < RandomNumber < ProbabilityArray[i]
+                while (probabilityArray.get(i) < r) {
+                    //if random number is higher than the last element in the array, 
+                    //break the loop to generate new random number, and go through from the beginning again. 
+                    if (i == population.size()-1) {
+                        break; 
+                    } 
+                    i++; 
+                }
+                
+                if (probabilityArray.get(i) >= r) {
+                    //add to the breeding pool based on probability of selection as calculated and stored in probabilityArray.
+                    breedingPool.add(population.get(i)); 
+
+    """
+
+    def selection(self):
         """ Method for selecting individuals for the breeding pool. 
-        Returns the index corresponding to the selected individual 
-        where each individual has a weight corresponding to its position in sorted order.
 
         Args:
         """
-        breedingPool = []
-        rankList = []
-        probabilityList = []
-        #n = len(self.recipes)
-        # Use the gauss formula to get the sum of all ranks (sum of integers 1 to N).
-        sumRank = (bookLength * (bookLength+1)) / 2
 
-        for rank, ind_fitness in enumerate(self.sort_fitness(self.recipes), 1):
+        #sumRank = ((1 + len(RecipeBook)) / (Double) 2) * len(RecipeBook)
+        probabilityArray = []
+        self.sort_fitness(len(RecipeBook))
 
-            rankList.append(rank, ind_fitness, (float(rank) / sumRank))
-            probabilityList.append((float(rank) / sumRank))
-        
-        for i in range(self.recipes):
+        self.sort_fitness(RecipeBook)
+        return
 
+    def truncSelection(self):
 
-        return breedingPool
+        """ Method for selecting individuals for the breeding pool. 
+        Args:
+        """
+        self.sort_fitness(RecipeBook)
+        truncateIndex = math.toIntExact(math.round(.2*(len(RecipeBook))))
+        for i in range(len(RecipeBook)):
+            randSelection = random.randint(truncateIndex) + (len(RecipeBook) - truncateIndex)
+            self.add(RecipeBook.get(randSelection))
+
+        return
     
     def recombination(self, breedingPool):
         
@@ -122,10 +159,9 @@ class RecipeBook:
 
         """
         newPopulation = []
-        
         index = 0
-        while (index > len(breedingPool)):
-            offspring = Recipe(self.crossover(breedingPool[index], breedingPool[index+1]), "recipe_number_{0}".format(len(newPopulation), self.inspiring_ingredients))
+        while (index < len(breedingPool)):
+            offspring = Recipe(self.crossover(breedingPool[index], breedingPool[index+1]), "recipe_number_{0}".format(len(newPopulation)), self.inspiring_ingredients)
             newPopulation.append(offspring)
             index += 2
             
@@ -134,21 +170,22 @@ class RecipeBook:
 
     def crossover(self, recipeOne, recipeTwo):
         offspringIngredients = [] #empty list of ingredients objects
-
-        pivot1 = random.randint(1, len(recipeOne))
-        pivot2 = random.randint(1, len(recipeTwo))
+        ingredients1 = getattr(recipeOne, 'ingredients')
+        ingredients2 = getattr(recipeTwo, 'ingredients')
+        pivot1 = random.randint(1, len(ingredients1))
+        pivot2 = random.randint(1, len(ingredients2))
         
         #CHECK FOR DUPLICATES
         duplicates = set()
         for i in range(0, pivot1):
-            ingredient_name = getattr(recipeOne[i], 'name')
-            ingredient_amount = getattr(recipeOne[i], 'amount')
+            ingredient_name = getattr(ingredients1[i], 'name')
+            ingredient_amount = getattr(ingredients1[i], 'amount')
             newIngredient = Ingredient(ingredient_name, ingredient_amount)
             offspringIngredients.append(newIngredient)
             duplicates.add(ingredient_name)
-        for j in range(pivot2, len(recipeTwo)):
-            ingredient_name = getattr(recipeTwo[j], 'name')
-            ingredient_amount = getattr(recipeTwo[j], 'amount')
+        for j in range(pivot2, len(ingredients2)):
+            ingredient_name = getattr(ingredients2[j], 'name')
+            ingredient_amount = getattr(ingredients2[j], 'amount')
             if (ingredient_name not in duplicates):
                 newIngredient = Ingredient(ingredient_name, ingredient_amount)
                 offspringIngredients.append(newIngredient)
@@ -157,18 +194,8 @@ class RecipeBook:
    
     def sort_fitness(self, recipes):
         """Sorts the fitness of each recipe based on """
-
-        n = len(recipes)
-        sumRank = (n * (n+1)) / 2
-        
-
-        for rank, ind_fitness in enumerate(self.sort_fitness(self.recipes), 1):
-
-            rankList.append(rank, ind_fitness, (float(rank) / sumRank))
-            probabilityList.append((float(rank) / sumRank))
         return
 
     def __str__(self):
         return str("\n".join([str(recipe) for recipe in self.recipes]))
-
 
