@@ -102,7 +102,6 @@ class RecipeBook:
         breeding pool.
         Args:
             breeding_pool (list): the list of recipes being used as parents to produce the new recipes
-
         """
         new_population = []
         index = 0
@@ -124,7 +123,7 @@ class RecipeBook:
         If there are duplicate ingredients in the new recipe, they are removed so each ingredient only appears once.
         Args:
             recipe_one (Recipe): the first recipe 
-            recipe_two (Reicpe): the second recipe 
+            recipe_two (Recipe): the second recipe 
         """
         offspring_ingredients = [] # Empty list of ingredients objects
         ingredients1 = recipe_one.ingredients
