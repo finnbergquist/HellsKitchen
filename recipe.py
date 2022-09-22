@@ -8,8 +8,9 @@ class Recipe:
     for mutation type 2 and 3. Finally, it also has a name to label the recipe.
     """
 
+    MUTATION_PROBABILITY = 0.5
 
-    def __init__(self, ingredients, name, inspiring_ingredients, mutation_probability=0.2):
+    def __init__(self, ingredients, name, inspiring_ingredients):
         """Constructor for the recipe class.
         Args:
             ingredients (list) : list of ingredient objects
@@ -21,7 +22,7 @@ class Recipe:
         self.inspiring_ingredients = inspiring_ingredients# set of ingredient_names
         self.ingredients = ingredients # list of ingredient objects
         self.name = name
-        self.mutation_probability = mutation_probability
+        self.mutation_probability = Recipe.MUTATION_PROBABILITY
 
 
     def get_fitness(self):
