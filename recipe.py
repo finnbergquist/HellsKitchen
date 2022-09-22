@@ -84,25 +84,32 @@ class Recipe:
         mutation_number = random.random()
 
         #Type1
-        if mutation_number<=0.25:
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            random_amount = random.randint(1, 80) #number of ounces, max of 80
+        if mutation_number<=0.25: 
+            ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)
+            random_amount = random.randrange(1,80)#number of ounces, max of 80
             self.ingredients[ingredient_to_change_index].amount = random_amount
             self.normalize()
         #Type2
-        elif 0.25<mutation_number<=0.5: #might need to change this so that it does not choose an ingredient already in recipe
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))            
-            self.ingredients[ingredient_to_change_index].ingredient_name = random.choice(self.available_ingredients())
+        elif 0.25<mutation_number<=0.5: 
+            ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)  
+            available_ingredients = self.available_ingredients()
+            if len(available_ingredients)>0:#If there are unused ingredients      
+                self.ingredients[ingredient_to_change_index].name = random.choice(self.available_ingredients())
         #Type3
         elif 0.5<mutation_number<=0.75:
-            ingredient_name = random.choice(self.available_ingredients())
-            amount = random.randint(1,80)#number of ounces of new ingredinet
-            new_ingredient = Ingredient(ingredient_name, amount)
-            self.ingredients.append(new_ingredient)
-            self.normalize()
+            available_ingredients = self.available_ingredients()
+            if len(available_ingredients)>0: #only proceed if there are unused ingredients
+                ingredient_name = random.choice(available_ingredients)
+                amount = random.randrange(1,80)#number of ounces of new ingredinet
+                new_ingredient = Ingredient(ingredient_name, amount)
+                self.ingredients.append(new_ingredient)
+                self.normalize()
+        #Type4
         else:
-            ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            self.ingredients.remove(self.ingredients[ingredient_to_change_index])        
+            ingredient_to_change_index = random.randint(0, len(self.ingredients)-1)
+            if len(self.ingredients) > 1: # don't remove the ingredient if it is the last one!
+                self.ingredients.pop(ingredient_to_change_index)        
+            self.normalize()
 
         return
     
