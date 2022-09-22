@@ -1,4 +1,7 @@
 # Soup Recipe Generator
+## Repo Link: https://github.com/finnbergquist/HellsKitchen
+
+
 ## Overview
 This program implements a simplified version of PIERRE (a genetic algorithm that generates soup recipes):
 http://computationalcreativity.net/iccc2012/wp-content/uploads/2012/05/119-Morris.pdf
@@ -48,4 +51,3 @@ Crystal Chong
 Souleman Toure
 
 
-## Repo Link: https://github.com/finnbergquist/HellsKitchen
