@@ -59,7 +59,7 @@ class RecipeBook:
         
         #RECOMBINATION
         offsprings = self.recombination(breedingPool)
-        #offsprings = self.recombination(self.recipes).copy() #for testing
+  
         #MUTATION
         for individual in offsprings:
             individual.mutate()
@@ -76,33 +76,7 @@ class RecipeBook:
             self.recipes.append(offsprings[j])
         
         return self.recipes
-
-<<<<<<< HEAD
-=======
-
->>>>>>> ccf1a0bd9a963102649f8bff496d78d3529ef71a
-    def rankSelection(self):
-        """
-        Rank selection makes the probability of selection proportional 
-        to relative fitness of the individual. 
-        
-        """
-        total_weight = 0
-        for recipe in self.recipes:
-            total_weight += recipe.get_fitness()
-
-        index = 0
-        r = random.Random() * total_weight
-
-        while index < (len(self.recipes) - 1):
-            r -= self.recipes[index].get_fitness()
-            if r <= 0:
-                break
-            index += 1
-
-        self.recipes.sort(key = lambda recipe: -1 * recipe.get_fitness())
-        return self.recipes[index]
-
+    
     def selection(self):
         """ Method for selecting individuals for the breeding pool. 
 
@@ -113,19 +87,34 @@ class RecipeBook:
             breeding_pool.append(self.rankSelection())
 
         return breeding_pool
-    
 
-    def roulette_wheel_selection(self):
-  
-    # Computes the totallity of the population fitness
-        population_fitness = sum([recipe.getfitness() for recipe in RecipeBook])
+    def rankSelection(self):
+        """
+        Rank selection makes the probability of selection proportional 
+        to relative fitness of the individual. 
+        
+        """
+        total_weight = 0
+        for recipe in self.recipes:
+            total_weight += recipe.get_fitness()
     
-    # Computes for each chromosome the probability 
-        recipe_probabilities = [recipe.getfitness()/population_fitness for recipe in RecipeBook]
+        # Computes the probability for each recipe
+        recipe_probabilities = [recipe.get_fitness()/total_weight for recipe in self.recipes]
     
-    # Selects one chromosome based on the computed probabilities
-        return np.random.choice(RecipeBook, p=recipe_probabilities)
+        # Selects a recipe based on the computed probabilities
+        return np.random.choice(self.recipes, p=recipe_probabilities)
 
+        # while index < (len(self.recipes) - 1):
+        #     r -= self.recipes[index].get_fitness()
+        #     if r <= 0:
+        #         break
+        #     index += 1
+
+        # self.recipes.sort(key = lambda recipe: -1 * recipe.get_fitness())
+        # return self.recipes[index]
+
+
+    
     def recombination(self, breedingPool):
         
         """Implements recombination using OnePoint crossover, a technique that will

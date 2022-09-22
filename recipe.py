@@ -55,7 +55,7 @@ class Recipe:
         for ingredient in self.ingredients:
             used_ingredient_names.add(ingredient.name)
 
-        available_ingredient_names = self.inspiring_ingredients - used_ingredient_names
+        available_ingredient_names = set(self.inspiring_ingredients) - used_ingredient_names
 
         return list(available_ingredient_names)
 
@@ -86,7 +86,7 @@ class Recipe:
         #Type1
         if mutation_number<=0.25:
             ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            random_amount = random.random(1,80) #number of ounces, max of 80
+            random_amount = random.randint(1, 80) #number of ounces, max of 80
             self.ingredients[ingredient_to_change_index].amount = random_amount
             self.normalize()
         #Type2
@@ -96,13 +96,13 @@ class Recipe:
         #Type3
         elif 0.5<mutation_number<=0.75:
             ingredient_name = random.choice(self.available_ingredients())
-            amount = random.random(1,80)#number of ounces of new ingredinet
-            new_ingredient = Ingredient.Ingredient(ingredient_name, amount)
+            amount = random.randint(1,80)#number of ounces of new ingredinet
+            new_ingredient = Ingredient(ingredient_name, amount)
             self.ingredients.append(new_ingredient)
             self.normalize()
         else:
             ingredient_to_change_index = random.randint(0, len(self.ingredients))
-            self.ingredients.remove(ingredient_to_change_index)        
+            self.ingredients.remove(self.ingredients[ingredient_to_change_index])        
 
         return
     
