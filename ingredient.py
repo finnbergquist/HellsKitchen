@@ -1,8 +1,8 @@
 
-from unicodedata import name
-
-
 class Ingredient():
+    """
+    Represents an ingredient in a recipe where each ingredient has a name and an amount in ounces.
+    """
 
     def __init__(self, name, amount):
         """
@@ -14,23 +14,6 @@ class Ingredient():
         self.name = name
         self.amount = amount
 
-    def getName(self):
-        """
-        Args:
-            None
-        return:
-            returns name of ingredient
-        """
-        return self.name
-    
-    def setName(self, newName):
-        """
-        Args:
-            newName (string) : New name that is given to ingrediant
-        return:
-            sets name of ingredient
-        """
-        self.name = newName
-    
+
     def __str__(self):
         return "{0}: {1}".format(self.name, round(self.amount, 4))
