@@ -68,14 +68,14 @@ class RecipeBook:
         self.sort_fitness(offsprings)
         
         #Set new population - top 50% from old and new pool
+        mid = len(originalRecipeBook) // 2
         self.recipes.clear()
-        for i in range(0, 3):
+        for i in range(0, mid):
             self.recipes.append(originalRecipeBook[i])
         
-        for j in range(0, 3):
+        for j in range(0, mid):
             self.recipes.append(offsprings[j])
-        
-        return self.recipes
+
     
     def selection(self):
         """ Method for selecting individuals for the breeding pool. 
@@ -138,11 +138,12 @@ class RecipeBook:
         """
         newPopulation = []
         index = 0
-        while (index < len(breedingPool)):
-            offspring = Recipe(self.crossover(breedingPool[index], breedingPool[index+1]), "recipe_number_{0}".format(len(newPopulation)), self.inspiring_ingredients)
+        while (len(newPopulation) < len(self.recipes)):
+            offspring = Recipe(self.crossover(breedingPool[index], breedingPool[index+1]), "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients)
+            self.total_recipes_created += 1
             newPopulation.append(offspring)
             index += 2
-            
+
         return newPopulation
         
 
