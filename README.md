@@ -24,6 +24,8 @@ http://computationalcreativity.net/iccc2012/wp-content/uploads/2012/05/119-Morri
 
 
 ## Running the Program
+First, make sure the following dependencies are installed: numpy, glob.
+
 In the command prompt, navigate to the directory that contains `evolve.py`. Then type:
 ```
 python3 evolve.py <inspiring set path> <output directory path> <generations>
