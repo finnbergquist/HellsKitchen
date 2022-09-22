@@ -114,35 +114,40 @@ class RecipeBook:
                 
                 if (probabilityArray.get(i) >= r) {
                     //add to the breeding pool based on probability of selection as calculated and stored in probabilityArray.
-                    breedingPool.add(population.get(i)); 
+                    breedingPool.add(population.get(i)); """
 
-    """
+    def rankSelection(self):
+        """
+        Rank selection makes the probability of selection proportional 
+        to relative fitness of the individual. 
+        
+        """
+        total_weight = 0
+        for recipe in self.recipes:
+            total_weight += recipe.get_fitness()
+
+        index = 0
+        r = random.Random() * total_weight
+
+        while index < (len(self.recipes) - 1):
+            r -= self.recipes[index].getfitness()
+            if r <= 0:
+                break
+            index += 1
+
+        self.recipes.sort(key = lambda recipe: -1 * recipe.get_fitness())
+        return self.recipes[index]
 
     def selection(self):
         """ Method for selecting individuals for the breeding pool. 
 
         Args:
         """
+        breeding_pool = []
+        for i in range(2*len(self.recipes)):
+            breeding_pool.append(self.rank_selection(i))
 
-        #sumRank = ((1 + len(RecipeBook)) / (Double) 2) * len(RecipeBook)
-        probabilityArray = []
-        self.sort_fitness(len(RecipeBook))
-
-        self.sort_fitness(RecipeBook)
-        return
-
-    def truncSelection(self):
-
-        """ Method for selecting individuals for the breeding pool. 
-        Args:
-        """
-        self.sort_fitness(RecipeBook)
-        truncateIndex = math.toIntExact(math.round(.2*(len(RecipeBook))))
-        for i in range(len(RecipeBook)):
-            randSelection = random.randint(truncateIndex) + (len(RecipeBook) - truncateIndex)
-            self.add(RecipeBook.get(randSelection))
-
-        return
+        return breeding_pool
     
     def recombination(self, breedingPool):
         
