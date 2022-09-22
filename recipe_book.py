@@ -82,6 +82,26 @@ class RecipeBook:
 
         print(self.recipes)
 
+    def rankSelection(self):
+        """
+        Rank selection makes the probability of selection proportional 
+        to relative fitness of the individual. 
+        
+        """
+        total_weight = 0
+        for recipe in self.recipes:
+            total_weight += recipe.get_fitness()
+
+        index = 0
+        r = random.Random() * total_weight
+
+        while index < (len(self.recipes) - 1):
+            r -= self.recipes[index].getfitness()
+            if r <= 0:
+                break
+            index += 1
+
+        return self.recipes[index]
 
     def selection(self, bookLength):
         """ Method for selecting individuals for the breeding pool. 
@@ -90,22 +110,11 @@ class RecipeBook:
 
         Args:
         """
-        breedingPool = []
-        rankList = []
-        probabilityList = []
-        #n = len(self.recipes)
-        # Use the gauss formula to get the sum of all ranks (sum of integers 1 to N).
-        sumRank = (bookLength * (bookLength+1)) / 2
+        breeding_pool = []
+        for i in range(2*len(self.recipes)):
+            breeding_pool.append(self.rank_selection(i))
 
-        for rank, ind_fitness in enumerate(self.sort_fitness(self.recipes), 1):
-
-            rankList.append(rank, ind_fitness, (float(rank) / sumRank))
-            probabilityList.append((float(rank) / sumRank))
-        
-        for i in range(self.recipes):
-
-
-        return breedingPool
+        return breeding_pool
     
     def recombination(self, breedingPool):
         
@@ -157,15 +166,6 @@ class RecipeBook:
    
     def sort_fitness(self, recipes):
         """Sorts the fitness of each recipe based on """
-
-        n = len(recipes)
-        sumRank = (n * (n+1)) / 2
-        
-
-        for rank, ind_fitness in enumerate(self.sort_fitness(self.recipes), 1):
-
-            rankList.append(rank, ind_fitness, (float(rank) / sumRank))
-            probabilityList.append((float(rank) / sumRank))
         return
 
     def __str__(self):
