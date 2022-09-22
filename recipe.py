@@ -109,5 +109,8 @@ class Recipe:
     def getIngredients(self):
         return self.ingredients
 
+    def get_fitness(self):
+        return len(self.ingredients)
+
     def __str__(self):
         return self.name + ": " + ", ".join([str(ingredient) for ingredient in self.ingredients])

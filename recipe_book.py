@@ -76,46 +76,6 @@ class RecipeBook:
         
         return self.recipes
 
-    """
-    private void Rank() {
-            
-            double sumRank = ((1 + population.size()) / (double) 2) * population.size(); // arithmetic series formula for the sum
-            List <Double> probabilityArray = new ArrayList<Double>();
-            
-            sortByFitness(population, 0, population.size()-1); 
-
-            //probability for each individual to get selected, is stored in probability array.
-            //least fit individual also has least probability of getting selected for the breeding pool.
-            for (int i = 0; i < population.size(); i++) {
-                //place probability of selecting an individual for the breeding pool in probabilityArray
-                //the index position of probability array corresponds to rank
-                if (i == 0) {
-                    probabilityArray.add(i/sumRank); 
-                } else {
-                    probabilityArray.add((i/sumRank) + probabilityArray.get(i-1));
-                    //System.out.println( "um" + population.size()); 
-                }
-            }
-
-            //selects individual from the population based on probability calculated from rank
-            while (breedingPool.size() != population.size()) {
-                int i = 0; 
-                double r = random.nextDouble();
-                
-                //find index i in probablityArray such that ProbabilityArray[i-1] < RandomNumber < ProbabilityArray[i]
-                while (probabilityArray.get(i) < r) {
-                    //if random number is higher than the last element in the array, 
-                    //break the loop to generate new random number, and go through from the beginning again. 
-                    if (i == population.size()-1) {
-                        break; 
-                    } 
-                    i++; 
-                }
-                
-                if (probabilityArray.get(i) >= r) {
-                    //add to the breeding pool based on probability of selection as calculated and stored in probabilityArray.
-                    breedingPool.add(population.get(i)); """
-
     def rankSelection(self):
         """
         Rank selection makes the probability of selection proportional 
@@ -130,7 +90,7 @@ class RecipeBook:
         r = random.Random() * total_weight
 
         while index < (len(self.recipes) - 1):
-            r -= self.recipes[index].getfitness()
+            r -= self.recipes[index].get_fitness()
             if r <= 0:
                 break
             index += 1
@@ -145,7 +105,7 @@ class RecipeBook:
         """
         breeding_pool = []
         for i in range(2*len(self.recipes)):
-            breeding_pool.append(self.rank_selection(i))
+            breeding_pool.append(self.rankSelection())
 
         return breeding_pool
     
