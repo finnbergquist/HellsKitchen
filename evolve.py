@@ -2,17 +2,19 @@ from recipe_book import RecipeBook
 import sys
 
 def main():
+    
+    #Read command-line & files
     inspiring_set_filepath, num_generations = sys.argv[1 : ]
     num_generations = int(num_generations)
+    
+    #Populate recipe book
     population = RecipeBook(inspiring_set_filepath)
-    #Step 1: read in original input file population
-    #create recipes
-    #store them in recipe book
 
-    #Step 2: Loop
+    #Evolve
     iteration = 0
     while iteration < num_generations:
         population.runGeneration()
+        print("Iteration", iteration, "completed.")
         iteration += 1
 
 

@@ -83,8 +83,18 @@ class RecipeBook:
         Args:
         """
         breeding_pool = []
-        for i in range(2*len(self.recipes)):
-            breeding_pool.append(self.rankSelection())
+        
+        total_weight = 0
+        #Compute total sum
+        for recipe in self.recipes:
+            total_weight += recipe.get_fitness()
+            
+        # Compute probability for each recipe
+        recipe_probabilities = [recipe.get_fitness()/total_weight for recipe in self.recipes]
+        
+        #Randomly select 12 parents for recombination
+        while (len(breeding_pool) < 2*len(self.recipes)):
+            breeding_pool.append(np.random.choice(self.recipes, p=recipe_probabilities))
 
         return breeding_pool
 
@@ -94,12 +104,9 @@ class RecipeBook:
         to relative fitness of the individual. 
         
         """
-        total_weight = 0
-        for recipe in self.recipes:
-            total_weight += recipe.get_fitness()
+
     
-        # Computes the probability for each recipe
-        recipe_probabilities = [recipe.get_fitness()/total_weight for recipe in self.recipes]
+        
     
         # Selects a recipe based on the computed probabilities
         return np.random.choice(self.recipes, p=recipe_probabilities)
@@ -110,7 +117,7 @@ class RecipeBook:
         #         break
         #     index += 1
 
-        # self.recipes.sort(key = lambda recipe: -1 * recipe.get_fitness())
+        
         # return self.recipes[index]
 
 
@@ -165,7 +172,7 @@ class RecipeBook:
    
     def sort_fitness(self, recipes):
         """Sorts the fitness of each recipe based on """
-        return
+        recipes.sort(key = lambda recipe: -1 * recipe.get_fitness())
 
     def __str__(self):
         return str("\n".join([str(recipe) for recipe in self.recipes]))
