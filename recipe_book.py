@@ -4,6 +4,7 @@ from hashlib import new
 import imp
 import random
 import math
+import numpy as np
 from sys import orig_argv
 from tokenize import Double
 from recipe import Recipe
@@ -76,6 +77,10 @@ class RecipeBook:
         
         return self.recipes
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ccf1a0bd9a963102649f8bff496d78d3529ef71a
     def rankSelection(self):
         """
         Rank selection makes the probability of selection proportional 
@@ -109,6 +114,18 @@ class RecipeBook:
 
         return breeding_pool
     
+
+    def roulette_wheel_selection(self):
+  
+    # Computes the totallity of the population fitness
+        population_fitness = sum([recipe.getfitness() for recipe in RecipeBook])
+    
+    # Computes for each chromosome the probability 
+        recipe_probabilities = [recipe.getfitness()/population_fitness for recipe in RecipeBook]
+    
+    # Selects one chromosome based on the computed probabilities
+        return np.random.choice(RecipeBook, p=recipe_probabilities)
+
     def recombination(self, breedingPool):
         
         """Implements recombination using OnePoint crossover, a technique that will
