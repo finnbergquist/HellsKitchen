@@ -1,0 +1,35 @@
+tomato juice: 0.4794
+corn: 0.6927
+onion: 0.5307
+cabbage: 0.0308
+celery: 0.0308
+carrot: 0.0204
+butter: 0.0102
+dry onion soup mix: 0.0312
+flour: 0.4911
+curry powder: 0.0008
+chicken broth: 0.2598
+apple: 0.1488
+vegetable broth: 0.1005
+egg noodle: 0.0205
+rice: 0.2737
+red onion: 0.0743
+thyme: 0.1465
+red kidney bean: 0.0328
+heavy cream: 0.0361
+cheese tortellini: 0.1324
+tomato: 0.1114
+chili powder: 0.1238
+water: 0.1775
+oregano: 0.3243
+ground beef: 1.1462
+jalapeno: 1.499
+red pepper flake: 1.2961
+cilantro: 0.4337
+chicken breast: 5.0612
+green bean: 4.5905
+basil: 11.7057
+beef broth: 6.0034
+salsa verde: 21.9149
+white bean: 22.2954
+Italian seasoning: 19.7737

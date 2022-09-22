@@ -33,4 +33,4 @@ class Ingredient():
         self.name = newName
     
     def __str__(self):
-        return "{0}: {1}".format(self.name, self.amount)
+        return "{0}: {1}".format(self.name, round(self.amount, 4))

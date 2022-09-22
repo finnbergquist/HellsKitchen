@@ -21,6 +21,7 @@ class RecipeBook:
         self.inspiring_ingredients = set()
         self.total_recipes_created = 0
         self.initialize_recipe_book(inspiring_set_path)
+        Recipe.inspiring_ingredients = self.inspiring_ingredients
 
 
     def initialize_recipe_book(self, filepath):
@@ -41,7 +42,7 @@ class RecipeBook:
                     ingredient = ingredient.strip()
                     current_ingredients.append(Ingredient(ingredient, float(amount)))
                     self.inspiring_ingredients.add(ingredient)
-                self.recipes.append(Recipe(current_ingredients, "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients))
+                self.recipes.append(Recipe(current_ingredients, "recipe_number_{0}".format(self.total_recipes_created)))
                 self.total_recipes_created += 1
 
 
@@ -106,7 +107,7 @@ class RecipeBook:
         new_population = []
         index = 0
         while (len(new_population) < len(self.recipes)):
-            offspring = Recipe(self.crossover(breedingPool[index], breedingPool[index+1]), "recipe_number_{0}".format(self.total_recipes_created), self.inspiring_ingredients)
+            offspring = Recipe(self.crossover(breedingPool[index], breedingPool[index+1]), "recipe_number_{0}".format(self.total_recipes_created))
             self.total_recipes_created += 1
             new_population.append(offspring)
             index += 2

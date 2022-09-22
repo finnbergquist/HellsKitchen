@@ -7,10 +7,10 @@ class Recipe:
     a list of all the possible ingredient names(inspiring_ingredients), so that it can choose new ingredients
     for mutation type 2 and 3. Finally, it also has a name to label the recipe.
     """
-
     MUTATION_PROBABILITY = 0.5
+    inspiring_ingredients = None
 
-    def __init__(self, ingredients, name, inspiring_ingredients):
+    def __init__(self, ingredients, name):
         """Constructor for the recipe class.
         Args:
             ingredients (list) : list of ingredient objects
@@ -19,7 +19,7 @@ class Recipe:
         Return:
             None
         """
-        self.inspiring_ingredients = inspiring_ingredients# set of ingredient_names
+        self.inspiring_ingredients = Recipe.inspiring_ingredients# set of ingredient_names
         self.ingredients = ingredients # list of ingredient objects
         self.name = name
         self.mutation_probability = Recipe.MUTATION_PROBABILITY
@@ -138,7 +138,7 @@ class Recipe:
 
     def __str__(self):
         '''
-       using __str__ method of ingredients, and joining them all together 
+        Using __str__ method of ingredients, and joining them all together 
         Return:
             Name (str) concatenated string of all ingredient names and ammounts
         '''
